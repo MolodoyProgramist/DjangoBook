@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8" />
+    <title>Мої бронювання</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+        .container {
+            max-width: 960px;
+        }
+        h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+        .form-container {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 3rem;
+            color: #fff;
+        }
+        label {
+            font-weight: 600;
+        }
+        input.form-control {
+            background: rgba(255,255,255,0.85);
+            border: none;
+            border-radius: 12px;
+            color: #333;
+            font-size: 1.1rem;
+            padding: 0.75rem 1rem;
+            transition: box-shadow 0.3s ease;
+        }
+        input.form-control:focus {
+            box-shadow: 0 0 8px #ffd700;
+            outline: none;
+            background: #fff;
+        }
+        button.btn-primary {
+            background: #ffd700;
+            border: none;
+            font-weight: 700;
+            font-size: 1.25rem;
+            border-radius: 50px;
+            padding: 12px 0;
+            width: 100%;
+            color: #333;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+        button.btn-primary:hover {
+            background: #ffca28;
+            transform: scale(1.05);
+        }
+        .booking-card {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            border-radius: 18px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            color: #fff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .booking-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+        }
+        .card-title {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .status-badge {
+            font-size: 1rem;
+            padding: 0.4em 0.8em;
+            border-radius: 50px;
+        }
+        .badge.bg-success {
+            background-color: #28a745 !important;
+            color: #fff;
+            box-shadow: 0 0 8px #28a745;
+        }
+        .badge.bg-warning {
+            background-color: #ffc107 !important;
+            color: #333;
+            box-shadow: 0 0 8px #ffc107;
+        }
+        .empty-state {
+            font-style: italic;
+            font-size: 1.25rem;
+            color: #ffe082;
+            text-align: center;
+            margin-top: 2rem;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+        }
+        /* Icons color */
+        .bi-door-open-fill,
+        .bi-calendar-check-fill,
+        .bi-calendar-x-fill,
+        .bi-check-circle,
+        .bi-hourglass-split {
+            filter: drop-shadow(0 0 1px rgba(0,0,0,0.3));
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button type="button" class="btn-close" aria-label="Close"></button>
+        <h1>Перевірити свої бронювання</h1>
+
+        <div class="form-container">
+            <form method="get" novalidate>
+                <div class="mb-4">
+                    <label for="name" class="form-label">Ім’я</label>
+                    <input type="text" id="name" name="name" class="form-control form-control-lg" value="{{ name|default:'' }}" required placeholder="Введіть ваше ім’я" />
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name="email" class="form-control form-control-lg" value="{{ email|default:'' }}" required placeholder="example@mail.com" />
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg fw-semibold">
+                    <i class="bi bi-search me-2"></i>Перевірити
+                </button>
+            </form>
+        </div>
+
+        {% if bookings is not none %}
+            <h2 class="mb-4 text-center fw-semibold">Ваші бронювання</h2>
+            {% if bookings %}
+                <div class="row g-4 justify-content-center">
+                    {% for booking in bookings %}
+                        <div class="col-md-6 col-lg-5 col-xl-4">
+                            <div class="card booking-card shadow rounded-4">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="bi bi-door-open-fill me-2 text-warning"></i>{{ booking.room.title }}
+                                    </h5>
+                                    <p class="mb-2">
+                                        <i class="bi bi-calendar-check-fill me-2 text-success"></i>
+                                        <strong>З:</strong> {{ booking.start_date|date:"d.m.Y H:i" }}
+                                    </p>
+                                    <p class="mb-3">
+                                        <i class="bi bi-calendar-x-fill me-2 text-danger"></i>
+                                        <strong>До:</strong> {{ booking.end_date|date:"d.m.Y H:i" }}
+                                    </p>
+                                    <p>
+                                        <strong>Статус:</strong>
+                                        {% if booking.is_confirmed %}
+                                            <span class="badge bg-success status-badge"><i class="bi bi-check-circle me-1"></i>Підтверджено</span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark status-badge"><i class="bi bi-hourglass-split me-1"></i>Очікується</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-state">Бронювань не знайдено.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
