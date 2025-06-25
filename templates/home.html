@@ -1,53 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<style>
-  body {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: #fff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  .welcome-container {
-    min-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 3rem;
-  }
-  h1 {
-    font-size: 3.5rem;
-    font-weight: 900;
-    text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
-  }
-  .username {
-    font-size: 1.5rem;
-    color: #ffd700;
-    margin-bottom: 3rem;
-    text-shadow: 1px 1px 5px rgba(0,0,0,0.4);
-  }
-  .btn-custom {
-    background: rgba(255,255,255,0.15);
-    border: 2px solid #fff;
-    color: #fff;
-    font-size: 1.25rem;
-    font-weight: 600;
-    width: 300px;
-    margin: 12px 0;
-    padding: 12px 0;
-    border-radius: 50px;
-    transition: background 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  }
-  .btn-custom:hover {
-    background: #ffd700;
-    color: #333;
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
-  }
-</style>
-
 <div class="welcome-container">
   <h1>Головна сторінка</h1>
   <div class="username">Ласкаво просимо, {{ request.user.username }}!</div>
